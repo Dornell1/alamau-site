@@ -92,6 +92,7 @@ def forgot_password_view(request):
                 {'URL': 'http://localhost:8000/auth/reset-password',
                  'TOKEN': token})
             try:
+                print()
                 send_mail(subject='Reset Your Password', message='', html_message=email_content,
                           from_email='settings.EMAIL_HOST_USER', recipient_list=[email], fail_silently=False)
                 return render(request, 'user/forgot-password.html', {'form': form, 'status': 'success'})
@@ -108,6 +109,7 @@ def reset_password_view(request, token):
             reset_password = ResetPassword.objects.get(token=token)
             email = reset_password.email
             created_at = reset_password.created_at
+            print(email)
             if (datetime.now(timezone.utc) - created_at).total_seconds() > RESET_PASSWORD_TOKEN_EXPIRATION_PERIOD:
                 reset_password.delete()
                 return render(request, 'user/reset-password.html',
